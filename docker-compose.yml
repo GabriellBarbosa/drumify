@@ -23,4 +23,9 @@ services:
     volumes:
       - ./backend:/app
     working_dir: /app
-    command: bash -c "source venv/bin/activate && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    # The backend image installs dependencies without creating a virtual
+    # environment, so there is no `venv` directory to activate here. Running
+    # the previous command would fail because `source venv/bin/activate`
+    # points to a non-existent path. The Dockerfile already exposes a global
+    # installation of `uvicorn`, so we can run it directly.
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
